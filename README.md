@@ -9,6 +9,15 @@ Idea
 Usage
 ----
 
+Download
+----
+Short Answer:
+
+```
+  cd /boot && wget --no-check-certificate https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh && chmod +x Buux.sh
+```
+Paste that into your xen enabled unraid 6b4+ console To get the latest version.
+
 Known Issues
 ----
 - At The end of the script, it tries to relaunch the VM with a failure, it seems it dident destroy the old one one yet (Workaround: xl create $domain.cfg)
