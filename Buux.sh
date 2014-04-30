@@ -90,7 +90,8 @@ echo "==========================================================================
 echo "ALL DONE!"
 echo "Hopefully the VM will start nicly when you quit this script :)"
 echo "Thanks for useing it"
-echo ""
+echo "Your server will boot in about 5 Seconds"
 echo "Author: lonix"
 echo "===================================================================================================="
+sleep 5
 xl create $rootDir/$domain/$domain.cfg
