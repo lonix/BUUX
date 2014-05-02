@@ -5,22 +5,35 @@ Really it was just a random codename i had to find before uploading.
 
 Idea
 ----
+The idea is to give users a easyer install experience for installing PV based Operating Systems onto unraid with XEN. 
 
 Usage
 ----
+Edit the root directory in the script to where you wanna keep your VM's.
+(default is: /mnt/cache/VM)
+Then run the script and answer the questions.
+
+
+Supported OperatingSystems
+----
+- Ubuntu Server 12.04 LTS
+- Ubuntu Server 14.04 LTS
+- CentOS6.5 Netboot
+
+
 
 Download
 ----
 Short Answer:
 
 ```
-  cd /boot && wget --no-check-certificate https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh && chmod +x Buux.sh
+  cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh && chmod +x Buux.sh
 ```
-Paste that into your xen enabled unraid 6b4+ console To get the latest version.
+Paste that into your xen enabled unraid 6b5a+ console To get the latest version.
 
 Known Issues
 ----
-- MAC Adress is dynamicly assigned, and you will get a new one each launch. this will be handled very soon, (workaround: get the mac from a running instance and paste it into $domain.cfg )
+
 
 Planed Features
 ----
