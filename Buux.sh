@@ -16,13 +16,18 @@ rootDir="/mnt/cache/VM"
 ####################################################
 
 ##Version Check
-Version="1.2"
+Version="1.3"
 
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/version)
-
+clear
 if [ "$Version" != "$latest" ]; then
 	echo "New version is avalible, newest version is $latest" 
 	echo "you are running version $Version"
+	echo ""
+	echo "New this version: "
+	echo "-----------------------------------------"
+	curl "https://raw.githubusercontent.com/lonix/BUUX/master/changes"
+	echo "-----------------------------------------"
 	echo "To upgrade simple copy-paste this into your console:"
 	echo "-----------------------------------------"
 	echo "cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh && chmod +x Buux.sh"
@@ -33,7 +38,7 @@ if [ "$Version" != "$latest" ]; then
 		 exit 0
 	fi
 fi
-
+exit 0
 ##Functions
 
 function manualSteps() {
@@ -187,9 +192,8 @@ case "$osSelected" in
 		#Download section
 		wget http://archive.ubuntu.com/ubuntu/dists/precise-updates/main/installer-amd64/current/images/netboot/xen/initrd.gz
 		wget http://archive.ubuntu.com/ubuntu/dists/precise-updates/main/installer-amd64/current/images/netboot/xen/vmlinuz
-		##TODO: Install images again (move to xenman part)
-		#wget http://larsendata.no/Ubuntu.png
-		#cp Ubuntu.png /boot/config/domains/$domain.png
+		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/ubuntu.png
+		cp ubuntu.png /boot/config/domains/$domain.png
 		##Create the Drive
 		truncate -s $diskSize $domain.img
 		#Allows manual parts of the installation in console
@@ -211,6 +215,8 @@ case "$osSelected" in
 		config_Install_Ubuntu
 		wget http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/xen/initrd.gz
 		wget http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/xen/vmlinuz
+		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/ubuntu.png
+		cp ubuntu.png /boot/config/domains/$domain.png
 		truncate -s $diskSize $domain.img
 		manualSteps
 		config_Boot_Ubuntu
@@ -227,6 +233,8 @@ case "$osSelected" in
 		config_Install_Centos
 		wget http://mirror.symnds.com/CentOS/6.5/os/x86_64/images/pxeboot/initrd.img
 		wget http://mirror.symnds.com/CentOS/6.5/os/x86_64/images/pxeboot/vmlinuz
+		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/centos.png
+		cp centos.png /boot/config/domains/$domain.png
 		truncate -s $diskSize $domain.img
 		echo "When Prompted for a mirror to install from, you can use: "
 		echo "http://mirrors.sonic.net/centos/6/os/x86_64/"
