@@ -10,6 +10,8 @@ rootDir="/mnt/cache/VM"
 
 Version="1.1"
 #Add header
+
+function config() {
 echo "
 ------------------------------------------
 ==========================================
@@ -48,12 +50,14 @@ echo "------------------------------------------"
 echo -n "OperatingSystem: "
 read osSelected
 ##TODO: There should probably be some sort of quality control here at a later stage
+}
 
-echo "Is the above configuration correct ? (y/n):"
+config
+echo -n "Is the above configuration correct ? (y/n): "
 read configIsGood
 if [ $configIsGood != y ]; then 
-echo "Please try again"
-exit 0
+clear
+config
 fi
 
 clear
