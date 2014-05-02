@@ -38,7 +38,7 @@ if [ "$Version" != "$latest" ]; then
 		 exit 0
 	fi
 fi
-exit 0
+
 ##Functions
 
 function manualSteps() {
