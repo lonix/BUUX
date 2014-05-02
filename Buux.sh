@@ -16,7 +16,7 @@ rootDir="/mnt/cache/VM"
 ####################################################
 
 ##Version Check
-Version="1.3"
+Version="1.2"
 
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/version)
 clear
