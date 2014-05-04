@@ -324,6 +324,6 @@ case "$osSelected" in
 #		tar xvf Tretflix-v1.3_x64-NAS.ova
 #		qemu-img-xen convert -O raw Tretflix-v1.3_x64-NAS-disk1.vmdk Tretflix-v1.3_x64-NAS.img
 
-;;
+	;;
 esac
 
