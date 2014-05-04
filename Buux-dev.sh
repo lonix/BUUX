@@ -91,6 +91,7 @@ read diskSize
 echo -n "Autostart on Boot: (y/n): "
 read -n 1 autostart
 echo ""
+echo ""
 echo "Currently Supported Operating System's are:"
 echo "------------------------------------------"
 echo "1. Ubuntu Server 12.04 LTS (ubuntu12)"
@@ -308,10 +309,10 @@ case "$osSelected" in
 		wget http://unraidrepo.ktz.me/archVM/ArchVM_v4.zip
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/archlinux.png
 		unzip ArchVM_v4.zip
-		mv "ArchVM/arch.img" "../$domain.img"
+		mv "ArchVM/arch.img" "$domain.img"
 		cp archlinux.png /boot/config/domains/$domain.png
 		create_Detached
-		attach_whenDone
+		attach_WhenDone
 		xenman_Autostart
 		rm -r ArchVM
 #
