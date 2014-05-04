@@ -241,8 +241,8 @@ case "$osSelected" in
 		config_Boot_Ubuntu
 		register_Xenman
 		create_Detached
-		attach_WhenDone
 		xenman_Autostart
+		attach_WhenDone
 		rm initrd.gz
 		rm vmlinuz
 
@@ -262,8 +262,8 @@ case "$osSelected" in
 		config_Boot_Centos
 		register_Xenman
 		create_Detached
-		attach_WhenDone
 		xenman_Autostart
+		attach_WhenDone
 		rm initrd.img
 		rm vmlinuz
 	;;
@@ -279,8 +279,8 @@ case "$osSelected" in
 		manualSteps
 		config_Boot_Ubuntu
 		create_Detached
-		attach_WhenDone
 		xenman_Autostart
+		attach_WhenDone
 		rm initrd.gz
 		rm vmlinuz
 	;;
@@ -296,8 +296,8 @@ case "$osSelected" in
 		manualSteps
 		config_Boot_Ubuntu
 		create_Detached
-		attach_WhenDone
 		xenman_Autostart
+		attach_WhenDone
 		rm initrd.gz
 		rm vmlinuz
 
@@ -312,8 +312,8 @@ case "$osSelected" in
 		mv "ArchVM/arch.img" "$domain.img"
 		cp archlinux.png /boot/config/domains/$domain.png
 		create_Detached
-		attach_WhenDone
 		xenman_Autostart
+		attach_WhenDone
 		rm -r ArchVM
 #
 #
