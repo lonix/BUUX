@@ -77,6 +77,7 @@ Written By Stian Larsen (aka. lonix)
 We will Start by asking you some Quesions:
 RAM should be Defined in MB and the Power of 2
 Disk shoud be Defined with a Suffix eg. G for Gigabytes
+Note: If planning to install pre-imaged appliances, disk size is ignored
 ------------------------------------------
 "
 echo -n "Domainname: "
@@ -87,6 +88,8 @@ echo -n "RAM: "
 read memory
 echo -n "Disk:"
 read diskSize
+echo -n "Autostart on Boot: (y/n): "
+read -n 1 autostart
 echo "Currently Supported Operating System's are:"
 echo "------------------------------------------"
 echo "1. Ubuntu Server 12.04 LTS (ubuntu12)"
@@ -94,6 +97,8 @@ echo "2. Ubuntu Server 14.04 LTS (ubuntu14)"
 echo "3. CentOS6.5 (cent65)"
 echo "4. Debian 6 LTS (debian6)"
 echo "5. Debian 7 (debian7)"
+echo "6. IronicBadger's ArchVM v.4 (ibarch4un)" 
+#echo "0. Blank disk and config with boot and install version"
 echo "------------------------------------------"
 echo -n "OperatingSystem: "
 read osSelected
@@ -123,6 +128,12 @@ sleep 3
 xl create $rootDir/$domain/$domain.cfg
 }
 
+function xenman_Autostart() {
+if  [ "$autostart" == "y" ]; then
+	xenman autostart $domain
+	echo "The domain has been configured to boot with $HOSTNAME"
+fi
+}
 
 function attach_WhenDone(){
   clear
@@ -134,7 +145,10 @@ function attach_WhenDone(){
 }
 
 
+function config_Add_Pygrub(){
 
+echo "bootloader = \"pygrub\"" >> $rootDir/$domain/$domain.cfg
+}
 
 function config_Install_Ubuntu(){
 echo "extra = \"debian-installer/exit/always_halt=true -- console=hvc0\"" >> $rootDir/$domain/$domain.cfg
@@ -206,6 +220,8 @@ case "$osSelected" in
 		create_Detached
 		#Ask to connect
 		attach_WhenDone
+		#Autostart if chosen
+		xenman_Autostart
 		#cleanup
 		rm initrd.gz
 		rm vmlinuz
@@ -224,6 +240,7 @@ case "$osSelected" in
 		register_Xenman
 		create_Detached
 		attach_WhenDone
+		xenman_Autostart
 		rm initrd.gz
 		rm vmlinuz
 
@@ -244,6 +261,7 @@ case "$osSelected" in
 		register_Xenman
 		create_Detached
 		attach_WhenDone
+		xenman_Autostart
 		rm initrd.img
 		rm vmlinuz
 	;;
@@ -259,7 +277,8 @@ case "$osSelected" in
 		manualSteps
 		config_Boot_Ubuntu
 		create_Detached
-		attach_WhenDOen
+		attach_WhenDone
+		xenman_Autostart
 		rm initrd.gz
 		rm vmlinuz
 	;;
@@ -275,11 +294,25 @@ case "$osSelected" in
 		manualSteps
 		config_Boot_Ubuntu
 		create_Detached
-		attach_WhenDOen
+		attach_WhenDone
+		xenman_Autostart
 		rm initrd.gz
 		rm vmlinuz
 
-
+	;;
+	6|ibarch4)
+		createDomain
+		config_General
+		config_Add_Pygrub
+		wget http://unraidrepo.ktz.me/archVM/ArchVM_v4.zip
+		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/archlinux.png
+		unzip ArchVM_v4.zip
+		mv "ArchVM/arch.img" "../$domain.img"
+		cp archlinux.png /boot/config/domains/$domain.png
+		create_Detached
+		attach_whenDone
+		xenman_Autostart
+		rm -r ArchVM
 #
 #
 #	;;
@@ -291,3 +324,4 @@ case "$osSelected" in
 
 ;;
 esac
+
