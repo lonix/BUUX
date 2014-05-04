@@ -90,6 +90,7 @@ echo -n "Disk:"
 read diskSize
 echo -n "Autostart on Boot: (y/n): "
 read -n 1 autostart
+echo ""
 echo "Currently Supported Operating System's are:"
 echo "------------------------------------------"
 echo "1. Ubuntu Server 12.04 LTS (ubuntu12)"
@@ -273,7 +274,7 @@ case "$osSelected" in
 		wget http://ftp.debian.org/debian/dists/squeeze/main/installer-amd64/current/images/netboot/xen/initrd.gz
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/debian.png
 		cp debian.png /boot/config/domains/$domain.png
-		truncate -s $diskSize $domain.imb
+		truncate -s $diskSize $domain.img
 		manualSteps
 		config_Boot_Ubuntu
 		create_Detached
@@ -290,7 +291,7 @@ case "$osSelected" in
 		wget http://ftp.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/xen/initrd.gz
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/debian.png
 		cp debian.png /boot/config/domains/$domain.png
-		truncate -s $diskSize $domain.imb
+		truncate -s $diskSize $domain.img
 		manualSteps
 		config_Boot_Ubuntu
 		create_Detached
