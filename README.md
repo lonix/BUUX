@@ -19,7 +19,10 @@ Supported OperatingSystems
 - Ubuntu Server 12.04 LTS
 - Ubuntu Server 14.04 LTS
 - CentOS6.5 Netboot
-
+- IronicBadger's ArchVM
+- Debian 6 LTS
+- Debian 7
+- CentOS 6
 
 
 Download
@@ -33,6 +36,7 @@ Paste that into your xen enabled unraid 6b5a+ console To get the latest version.
 
 Known Issues
 ----
+- You get prompted for disk size even if you wanna use a appliance.
 
 
 Planed Features
