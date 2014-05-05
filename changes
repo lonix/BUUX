@@ -1,5 +1,6 @@
-* You can now redo config if you make a mistake. Curtesy of: hooger
-* Version Check.
-* Images is hosted on github.
-* CentOS is added
-* Code Cleanup
+1.3
+----
+- Debian 6
+- Debian 7
+- ArchVM (IronicBadger's Image)
+- Ability to Setup autostart on Boot.
