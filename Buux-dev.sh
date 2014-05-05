@@ -16,7 +16,7 @@ rootDir="/mnt/cache/VM"
 ####################################################
 
 ##Version Check
-Version="1.3"
+Version="1.4"
 
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/version)
 clear
@@ -30,7 +30,7 @@ if [ "$Version" != "$latest" ]; then
 	echo "-----------------------------------------"
 	echo "To upgrade simple copy-paste this into your console:"
 	echo "-----------------------------------------"
-	echo "cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh && chmod +x Buux.sh"
+	echo "cd /boot && wget -nc -r https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh && chmod +x Buux.sh"
 	echo "-----------------------------------------"
 	echo -n "Continue script running this version ? (y/n)"
 	read quit
@@ -120,8 +120,16 @@ echo "disk = ['file:$rootDir/$domain/$domain.img,xvda,w' ]" >> $rootDir/$domain/
 }
 
 
-function register_Xenman(){
+function xenman_Register(){
 xenman register $rootDir/$domain/$domain.cfg
+}
+
+
+function xenman_Autostart() {
+if  [ "$autostart" == "y" ]; then
+	xenman autostart $domain
+	echo "The domain has been configured to boot with $HOSTNAME"
+fi
 }
 
 
@@ -130,12 +138,6 @@ sleep 3
 xl create $rootDir/$domain/$domain.cfg
 }
 
-function xenman_Autostart() {
-if  [ "$autostart" == "y" ]; then
-	xenman autostart $domain
-	echo "The domain has been configured to boot with $HOSTNAME"
-fi
-}
 
 function attach_WhenDone(){
   clear
@@ -217,7 +219,7 @@ case "$osSelected" in
 		manualSteps
 		#Reconfigures domain.cfg to use grub rather than kernel
 		config_Boot_Ubuntu
-		register_Xenman
+		xenman_Register
 		#start it upagain
 		create_Detached
 		#Ask to connect
@@ -239,7 +241,7 @@ case "$osSelected" in
 		truncate -s $diskSize $domain.img
 		manualSteps
 		config_Boot_Ubuntu
-		register_Xenman
+		xenman_Register
 		create_Detached
 		xenman_Autostart
 		attach_WhenDone
@@ -260,7 +262,7 @@ case "$osSelected" in
 		echo "http://mirrors.sonic.net/centos/6/os/x86_64/"
 		manualSteps
 		config_Boot_Centos
-		register_Xenman
+		xenman_Register
 		create_Detached
 		xenman_Autostart
 		attach_WhenDone
@@ -278,6 +280,7 @@ case "$osSelected" in
 		truncate -s $diskSize $domain.img
 		manualSteps
 		config_Boot_Ubuntu
+		xenman_Register
 		create_Detached
 		xenman_Autostart
 		attach_WhenDone
@@ -295,6 +298,7 @@ case "$osSelected" in
 		truncate -s $diskSize $domain.img
 		manualSteps
 		config_Boot_Ubuntu
+		xenman_Register
 		create_Detached
 		xenman_Autostart
 		attach_WhenDone
@@ -311,6 +315,7 @@ case "$osSelected" in
 		unzip ArchVM_v4.zip
 		mv "ArchVM/arch.img" "$domain.img"
 		cp archlinux.png /boot/config/domains/$domain.png
+		xenman_Register
 		create_Detached
 		xenman_Autostart
 		attach_WhenDone
