@@ -30,7 +30,7 @@ if [ "$Version" != "$latest" ]; then
 	echo "-----------------------------------------"
 	echo "To upgrade simple copy-paste this into your console:"
 	echo "-----------------------------------------"
-	echo "cd /boot && wget -nc -r  https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh && chmod +x Buux.sh"
+	echo " cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh -O Buux.sh && chmod +x Buux.sh"
 	echo "-----------------------------------------"
 	echo -n "Continue script running this version ? (y/n)"
 	read quit

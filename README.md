@@ -30,7 +30,7 @@ Download
 Short Answer:
 
 ```
-  cd /boot && wget -nc -r https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh && chmod +x Buux.sh
+   cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh -O Buux.sh && chmod +x Buux.sh
 ```
 Paste that into your xen enabled unraid 6b5a+ console To get the latest version.
 
