@@ -76,7 +76,7 @@ Written By Stian Larsen (aka. lonix)
 ------------------------------------------
 We will Start by asking you some Quesions:
 RAM should be Defined in MB and the Power of 2
-Disk shoud be Defined with a Suffix eg. G for Gigabytes
+Disk shoud be Defined in MB
 Note: If planning to install pre-imaged appliances, disk size is ignored
 ------------------------------------------
 "
@@ -84,12 +84,12 @@ echo -n "Domainname: "
 read domain
 echo -n "vCPUs: "
 read cpuCount
-echo -n "RAM: "
+echo -n "RAM(MB): "
 read memory
-echo -n "Disk:"
+echo -n "Disk(GB):"
 read diskSize
 echo -n "Autostart on Boot: (y/n): "
-read -n 1 autostart
+read autostart
 echo ""
 echo ""
 echo "Currently Supported Operating System's are:"
@@ -128,7 +128,7 @@ xenman register $rootDir/$domain/$domain.cfg
 function xenman_Autostart() {
 if  [ "$autostart" == "y" ]; then
 	xenman autostart $domain
-	echo "The domain has been configured to boot with $HOSTNAME"
+#	echo "The domain has been configured to boot with $HOSTNAME"
 fi
 }
 
@@ -149,6 +149,10 @@ function attach_WhenDone(){
 }
 
 
+function disk_Create(){
+truncate -s ${diskSize}G $domain.img
+
+}
 function config_Add_Pygrub(){
 
 echo "bootloader = \"pygrub\"" >> $rootDir/$domain/$domain.cfg
@@ -193,7 +197,7 @@ while [ "$configIsGood" != "y" ]
  do
 	clear
 	configAsk
-	echo -n "Is this correct ?"
+	echo -n "Is this correct ?(y/n)"
 	read configIsGood
 done
 
@@ -214,7 +218,7 @@ case "$osSelected" in
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/ubuntu.png
 		cp ubuntu.png /boot/config/domains/$domain.png
 		##Create the Drive
-		truncate -s $diskSize $domain.img
+		disk_Create
 		#Allows manual parts of the installation in console
 		manualSteps
 		#Reconfigures domain.cfg to use grub rather than kernel
@@ -238,7 +242,7 @@ case "$osSelected" in
 		wget http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/xen/vmlinuz
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/ubuntu.png
 		cp ubuntu.png /boot/config/domains/$domain.png
-		truncate -s $diskSize $domain.img
+		disk_Create
 		manualSteps
 		config_Boot_Ubuntu
 		xenman_Register
@@ -257,7 +261,7 @@ case "$osSelected" in
 		wget http://mirror.symnds.com/CentOS/6.5/os/x86_64/images/pxeboot/vmlinuz
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/centos.png
 		cp centos.png /boot/config/domains/$domain.png
-		truncate -s $diskSize $domain.img
+		disk_Create
 		echo "When Prompted for a mirror to install from, you can use: "
 		echo "http://mirrors.sonic.net/centos/6/os/x86_64/"
 		manualSteps
@@ -277,7 +281,7 @@ case "$osSelected" in
 		wget http://ftp.debian.org/debian/dists/squeeze/main/installer-amd64/current/images/netboot/xen/initrd.gz
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/debian.png
 		cp debian.png /boot/config/domains/$domain.png
-		truncate -s $diskSize $domain.img
+		disk_Create
 		manualSteps
 		config_Boot_Ubuntu
 		xenman_Register
@@ -295,7 +299,7 @@ case "$osSelected" in
 		wget http://ftp.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/xen/initrd.gz
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/debian.png
 		cp debian.png /boot/config/domains/$domain.png
-		truncate -s $diskSize $domain.img
+		disk_Create
 		manualSteps
 		config_Boot_Ubuntu
 		xenman_Register
