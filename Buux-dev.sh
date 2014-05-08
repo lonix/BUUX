@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-rootDir="/mnt/cache/VM"
-
+#rootDir="/mnt/cache/VM"
+rootDir="/home/lonix/VM"
 ####################################################
 # Developers notes
 #
@@ -77,7 +77,9 @@ Written By Stian Larsen (aka. lonix)
 We will Start by asking you some Quesions:
 RAM should be Defined in MB and the Power of 2
 Disk shoud be Defined in MB
-Note: If planning to install pre-imaged appliances, disk size is ignored
+
+Note: If planning to install pre-imaged appliances.
+disk size is ignored, but still requred to enter.
 ------------------------------------------
 "
 echo -n "Domainname: "
@@ -324,6 +326,17 @@ case "$osSelected" in
 		xenman_Autostart
 		attach_WhenDone
 		rm -r ArchVM
+	;;
+	0|blank)
+		createDomain
+		config_General
+		config_Boot_Ubuntu
+		mv $domain.cfg ${domain}-boot.cfg
+		config_General
+		config_Install_Ubuntu
+		mv $domain.cfg ${domain}-install.cfg
+		disk_Create
+
 #
 #
 #	;;
