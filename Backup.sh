@@ -8,12 +8,13 @@ logHome="/mnt/user/VMBackup"
 #
 #done
 function log(){
-
 stamp=$(date "+%Y/%m/%d %H:%M:%S [$$]")
 echo $stamp $1 >> "$logHome/$(date +%Y%m%d)_backup.log"
 }
 
-
+function sync(){
+rsync -rpsazPt --log-file="$logHome/$(date +%Y%m%d)_backup.log" "$vmHome/$dir" "$backupHome"
+}
 
 size=$(du -hs $vmHome | cut -f 1)
 log "Initalizing backup"
@@ -23,7 +24,6 @@ mapfile -s2 -t running < <(xl list|cut -d ' ' -f 1)
 cd $vmHome
 for dir in */ ; do
 	dir=${dir%/}
-	backup=$(rsync -rpsazPt --log-file="$logHome/$(date +%Y%m%d)_backup.log" "$vmHome/$dir" "$backupHome")
 if [[ $dir == *DELETE* ]]; then
 log "Skipping $dir reason: deleted"
 		continue
@@ -33,15 +33,16 @@ log "Skipping $dir reason: deleted"
 		if  [[ "$i" == "$dir" ]];
 		then
 #			echo "$dir: Running"
-			log "$dir has been paused"
 			xl pause "$dir"
-			$backup
+			log "$dir has been paused"
+			sync
 			xl unpause "$dir"
 			log "$dir has been resumed"
 			continue 2
 		fi
-			$backup
 	done
+			sync
+
 done
 
 log "Finnished backing up"
