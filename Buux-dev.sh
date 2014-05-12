@@ -130,6 +130,7 @@ echo "3. CentOS6.5 (cent65)"
 echo "4. Debian 6 LTS (debian6)"
 echo "5. Debian 7 (debian7)"
 echo "6. IronicBadger's ArchVM v.4 (ibarch4un)" 
+echo "7. Turnkey Owncloud 13(owncloud)"
 #echo "0. Blank disk and config with boot and install version"
 echo "------------------------------------------"
 echo -n "OperatingSystem: "
@@ -183,6 +184,23 @@ function disk_Create(){
 truncate -s ${diskSize}G $domain.img
 
 }
+
+function disk_Format(){
+mkfs ext4 -F $domain.img
+}
+
+function disk_Mount(){
+mkdir /tmp/$domain
+mount -o loop,rw,sync $domain.img /tmp/$domain
+}
+
+
+function disk_Umount(){
+umount /tmp/$domain
+rm -r $domain
+}
+
+
 function config_Add_Pygrub(){
 
 echo "bootloader = \"pygrub\"" >> $rootDir/$domain/$domain.cfg
@@ -369,6 +387,22 @@ case "$osSelected" in
 		xenman_Autostart
 		attach_WhenDone
 		rm -r ArchVM
+	7|owncloud)
+		createDomain
+		osName="Owncloud"
+		config_General
+		config_Add_Pygrub
+		wget "http://downloads.sourceforge.net/project/turnkeylinux/xen/turnkey-owncloud-13.0-wheezy-amd64-xen.tar.bz2"
+		disk_Create
+		disk_Format
+		disk_Mount
+		tar xjf turnkey-owncloud-13.0-wheezy-amd64-xen.tar.bz2 -C /tmp/"$domain"
+		disk_Umount
+		
+
+
+	rm -r /tmp/$domain
+	
 	;;
 	0|blank)
 		createDomain
