@@ -41,7 +41,7 @@ fi
 
 ##Defaults
 bridge="br0"
-rootDir="/mnt/cache/VMS"
+rootDir="/mnt/cache/VM"
 
 ##check for and read a configfile
 
@@ -72,9 +72,8 @@ function create_Readme(){
 readme="$rootDir"/"$domain"/README.md
 
 touch "$readme"
-echo "$domain" > $readme
-echo "---------" >> $readme
-echo "**$osName**" >> $readme
+echo "**$osName**" > $readme
+echo "" >> $readme
 echo "MAC: $mac" >> $readme
 echo "" >> $readme
 echo "* $cpuCount vCPUs" >> $readme
@@ -373,7 +372,7 @@ case "$osSelected" in
 	;;
 	0|blank)
 		createDomain
-		osName="No Operatingsystem!!"
+		osName="No Operatingsystem."
 		config_General
 		config_Boot_Ubuntu
 		mv $domain.cfg ${domain}-boot.cfg
