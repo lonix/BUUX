@@ -66,6 +66,23 @@ echo "------------------------------------------"
 
 }
 
+
+function create_Readme(){
+
+readme="$rootDir"/"$domain"/README.md
+
+touch "$readme"
+echo "$domain" > $readme
+echo "---------" >> $readme
+echo "**$osName**" >> $readme
+echo "MAC: $mac" >> $readme
+echo "" >> $readme
+echo "* $cpuCount vCPUs" >> $readme
+echo "* $memory MB RAM" >> $readme
+echo "* $diskSize GB Sysdisk" >> $readme
+
+}
+
 function createDomain(){
 ## Create and enter domain
 mkdir -p $rootDir/$domain
@@ -223,6 +240,8 @@ case "$osSelected" in
 	1|ubuntu12)
 		#Creates folder
 		createDomain
+		#Set Name
+		osName="Ubuntu LTS 12.04"
 		#Compiles Initial Config
 		config_General
 		config_Install_Ubuntu
@@ -237,6 +256,9 @@ case "$osSelected" in
 		manualSteps
 		#Reconfigures domain.cfg to use grub rather than kernel
 		config_Boot_Ubuntu
+		#Creates README.md
+		create_Readme
+		#Registers VM with Xenman
 		xenman_Register
 		#start it upagain
 		create_Detached
@@ -250,6 +272,7 @@ case "$osSelected" in
 	;;
 	2|ubuntu14)
 		createDomain
+		osName="Ubuntu LTS 14.04"
 		config_General
 		config_Install_Ubuntu
 		wget http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/xen/initrd.gz
@@ -259,6 +282,7 @@ case "$osSelected" in
 		disk_Create
 		manualSteps
 		config_Boot_Ubuntu
+		create_Readme
 		xenman_Register
 		create_Detached
 		xenman_Autostart
@@ -269,6 +293,7 @@ case "$osSelected" in
 	;;
 	3|cent65)
 		createDomain
+		osName="CentOS 6.5"
 		config_General
 		config_Install_Centos
 		wget http://mirror.symnds.com/CentOS/6.5/os/x86_64/images/pxeboot/initrd.img
@@ -280,6 +305,7 @@ case "$osSelected" in
 		echo "http://mirrors.sonic.net/centos/6/os/x86_64/"
 		manualSteps
 		config_Boot_Centos
+		create_Readme
 		xenman_Register
 		create_Detached
 		xenman_Autostart
@@ -289,6 +315,7 @@ case "$osSelected" in
 	;;
 	4|debian6)
 		createDomain
+		osName="Debian 6 LTS"
 		config_General
 		config_Install_Ubuntu
 		wget http://ftp.debian.org/debian/dists/squeeze/main/installer-amd64/current/images/netboot/xen/vmlinuz
@@ -298,6 +325,7 @@ case "$osSelected" in
 		disk_Create
 		manualSteps
 		config_Boot_Ubuntu
+		create_Readme
 		xenman_Register
 		create_Detached
 		xenman_Autostart
@@ -307,6 +335,7 @@ case "$osSelected" in
 	;;
 	5|debian7)
 		createDomain
+		osName="Debian 7"
 		config_General
 		config_Install_Ubuntu
 		wget http://ftp.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/xen/vmlinuz
@@ -316,6 +345,7 @@ case "$osSelected" in
 		disk_Create
 		manualSteps
 		config_Boot_Ubuntu
+		create_Readme
 		xenman_Register
 		create_Detached
 		xenman_Autostart
@@ -326,6 +356,7 @@ case "$osSelected" in
 	;;
 	6|ibarch4)
 		createDomain
+		osName="Ironic Badger's ArchVM v.4"
 		config_General
 		config_Add_Pygrub
 		wget http://unraidrepo.ktz.me/archVM/ArchVM_v4.zip
@@ -333,6 +364,7 @@ case "$osSelected" in
 		unzip ArchVM_v4.zip
 		mv "ArchVM/arch.img" "$domain.img"
 		cp archlinux.png /boot/config/domains/$domain.png
+		create_Readme
 		xenman_Register
 		create_Detached
 		xenman_Autostart
@@ -341,6 +373,7 @@ case "$osSelected" in
 	;;
 	0|blank)
 		createDomain
+		osName="No Operatingsystem!!"
 		config_General
 		config_Boot_Ubuntu
 		mv $domain.cfg ${domain}-boot.cfg
@@ -348,6 +381,7 @@ case "$osSelected" in
 		config_Install_Ubuntu
 		mv $domain.cfg ${domain}-install.cfg
 		disk_Create
+		create_Readme
 
 #
 #
