@@ -1,8 +1,8 @@
 #!/bin/bash
 
-
+#network="xenbr0"
 #rootDir="/mnt/cache/VM"
-rootDir="/home/lonix/VM"
+
 ####################################################
 # Developers notes
 #
@@ -76,7 +76,7 @@ Written By Stian Larsen (aka. lonix)
 ------------------------------------------
 We will Start by asking you some Quesions:
 RAM should be Defined in MB and the Power of 2
-Disk shoud be Defined in MB
+Disk shoud be Defined in GB
 
 Note: If planning to install pre-imaged appliances.
 disk size is ignored, but still requred to enter.
