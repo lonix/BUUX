@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#network="xenbr0"
-#rootDir="/mnt/cache/VM"
 
 ####################################################
 # Developers notes
@@ -39,7 +37,21 @@ if [ "$Version" != "$latest" ]; then
 	fi
 fi
 
+##Set parameters and if read config
+
+##Defaults
+bridge="br0"
+rootDir="/mnt/cache/VMS"
+
+##check for and read a configfile
+
+if [ -f "Buux.conf" ]; then
+	source Buux.conf;
+fi
+
 ##Functions
+
+
 
 function manualSteps() {
 echo "------------------------------------------"
@@ -117,7 +129,7 @@ touch $rootDir/$domain/$domain.cfg
 echo "name = \"$domain\"" > $rootDir/$domain/$domain.cfg
 echo "vcpus = '$cpuCount'" >> $rootDir/$domain/$domain.cfg
 echo "memory = '$memory'" >> $rootDir/$domain/$domain.cfg
-echo "vif = [ 'bridge=br0,mac=$mac' ]" >> $rootDir/$domain/$domain.cfg
+echo "vif = [ 'bridge=$bridge,mac=$mac' ]" >> $rootDir/$domain/$domain.cfg
 echo "disk = ['file:$rootDir/$domain/$domain.img,xvda,w' ]" >> $rootDir/$domain/$domain.cfg
 }
 
