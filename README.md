@@ -34,6 +34,18 @@ Short Answer:
 ```
 Paste that into your xen enabled unraid 6b5a+ console To get the latest version.
 
+Configuration
+----
+Well 1.4 and onwards will have a configFile for options, buux will look for a configFile and if one can not be found it will use defaults. (config should be: Buux.conf)
+There are currently 2 Options:
+| Option|Default|
+| --- | --- |
+| bridge | br0 |
+| rootDir | /mnt/cache/VM |
+
+sample config is found at Buux.conf.sample
+
+
 Known Issues
 ----
 - You get prompted for disk size even if you wanna use a appliance.

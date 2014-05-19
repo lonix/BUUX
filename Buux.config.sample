@@ -1,0 +1,3 @@
+#Remember to use dubbleqouts around options to ensure no mistakes later in script.
+bridge="br1"
+rootDir="/mnt/SSD1/"
