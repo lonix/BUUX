@@ -38,10 +38,11 @@ Configuration
 ----
 Well 1.4 and onwards will have a configFile for options, buux will look for a configFile and if one can not be found it will use defaults. (config should be: Buux.conf)
 There are currently 2 Options:
-| Option|Default|
-| --- | --- |
-| bridge | br0 |
-| rootDir | /mnt/cache/VM |
+
+| Option    | Default       |
+| :--------- | :-----------   |
+| bridge    | br0           |
+| rootDir   | /mnt/cache/VM |
 
 sample config is found at Buux.conf.sample
 
