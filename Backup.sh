@@ -13,7 +13,7 @@ echo $stamp $1 >> "$logHome/$(date +%Y%m%d)_backup.log"
 }
 
 function sync(){
-rsync -rpsazPt --log-file="$logHome/$(date +%Y%m%d)_backup.log" "$vmHome/$dir" "$backupHome"
+rsync -asP --inplace --no-checksum --log-file="$logHome/$(date +%Y%m%d)_backup.log" "$vmHome/$dir" "$backupHome"
 }
 
 size=$(du -hs $vmHome | cut -f 1)
