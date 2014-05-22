@@ -7,6 +7,28 @@ logHome="/mnt/user/VMBackup"
 #xl list | tail -n+3 | cut -d ' ' -f 1 | while read line; do
 #
 #done
+
+#VersionCheck
+Version="1.2"
+
+latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/VMBackup-version)
+clear
+if [ "$Version" != "$latest" ]; then
+        echo "New version is avalible, newest version is $latest"
+        echo "you are running version $Version"
+        echo ""
+        echo "New this version: "
+        echo "-----------------------------------------"
+        curl "https://raw.githubusercontent.com/lonix/BUUX/master/VMBackup-changes"
+        echo "-----------------------------------------"
+        echo "To upgrade simple copy-paste this into your console:"
+        echo "-----------------------------------------"
+        echo "cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/VMBackup.sh -O VMBackup.sh && chmod +x VMBackup.sh
+        echo "-----------------------------------------"
+	sleep 5
+fi
+
+
 function log(){
 stamp=$(date "+%Y/%m/%d %H:%M:%S [$$]")
 echo $stamp $1 >> "$logHome/$(date +%Y%m%d)_backup.log"

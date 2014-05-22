@@ -54,6 +54,28 @@ fi
 
 
 
+function ibarch_Gather() {
+runonce="$rootDir"/"$domain"/runonce.cfg
+touch $runonce
+echo "dom0ip=$(ifconfig br0 | grep inet | cut -d ' ' -f 10)" >> $runonce
+echo "dom0host=$(cat /etc/hostname)" >> $runonce
+echo "You are about to pre-seed the ArchVM"
+while [[ "$ibarch_root_pw" != "$ibarch_root_pw_confirm" ]]; do
+echo -n "Enter root password: "
+read ibarch_root_pw
+echo -n "Again: "
+read ibarch_root_pw_confirm
+done
+echo -n "Username: "
+read ibarch_user_name
+while [[ "$ibarch_user_pw" != "$ibarch_user_pw_confirm" ]]; do
+echo -n "Enter $ibarch_user_name's password: "
+read ibarch_user_pw
+eacho -n "Again: "
+read ibarch_user_pw_confirm
+}
+
+
 function manualSteps() {
 echo "------------------------------------------"
 read -p "Press [Enter] To Start your Installation"
@@ -132,7 +154,7 @@ echo "4. Debian 6 LTS (debian6)"
 echo "5. Debian 7 (debian7)"
 echo "6. IronicBadger's ArchVM v.4 (ibarch4un)" 
 #echo "7. Turnkey Owncloud 13(owncloud)"
-#echo "0. Blank disk and config with boot and install version"
+echo "0. Blank disk and config with boot and install version"
 echo "------------------------------------------"
 echo -n "OperatingSystem: "
 read osSelected
@@ -198,7 +220,7 @@ mount -o loop,rw,sync $domain.img /tmp/$domain
 
 function disk_Umount(){
 umount /tmp/$domain
-rm -r $domain
+rm -r /tmp/$domain
 }
 
 
@@ -242,7 +264,7 @@ echo "bootloader = \"pygrub\"" >> $rootDir/$domain/$domain.cfg
 
 ##Asks Quesions to make up data of config
 
-while [ "$configIsGood" != "y" ]
+while [[ "$configIsGood" != "y" ]]
  do
 	clear
 	configAsk
@@ -389,6 +411,26 @@ case "$osSelected" in
 		xenman_Autostart
 		attach_WhenDone
 		rm -r ArchVM
+	ibarch5)
+		createDomain
+		osName="Ironic Badger's ArchVM v.5"
+		ibarch_Gather
+		config_General
+		config_Add_Pygrub
+		if  [[ ! -f ArchVM_v5.zip ]]; then wget https://dl.dropboxusercontent.com/u/6775695/ArchVM/ArchVM_v5.zip; fi
+		if  [[ ! -f ArchVM_v5.zip ]]; then wget http://unraidrepo.ktz.me/archVM/ArchVM_v5.zip; fi
+		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/archlinux.png
+		unzip ArchVM_v5.zip
+		mv "ArchVM/arch.img" "$domain.img"
+		cp archlinux.png /boot/config/domains/$domain.png
+		create_Readme
+		ibarch_SaveOptions
+		xenman_Register
+		create_Detached
+		xenman_Autostart
+		attach_WhenDone
+		rm -r ArchVM
+
 #	owncloud)
 #		createDomain
 #		osName="Owncloud"
