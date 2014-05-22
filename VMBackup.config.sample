@@ -1,0 +1,4 @@
+vmHome="/mnt/cache/VM"
+backupHome="/mnt/user/VMBackup"
+logHome="/mnt/user/VMBackup"
+
