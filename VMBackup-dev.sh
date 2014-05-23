@@ -34,7 +34,7 @@ fi
 
 function log(){
 stamp=$(date "+%Y/%m/%d %H:%M:%S [$$]")
-echo $stamp $1 >> "$logHome/$(date +%Y%m%d)_backup.log"
+echo "$stamp" "$1" >> "$logHome/$(date +%Y%m%d)_backup.log"
 }
 
 function sync(){
@@ -44,7 +44,7 @@ rsync -asP --inplace --no-checksum --log-file="$logHome/$(date +%Y%m%d)_backup.l
 
 function cleanup(){
 rm -r $backupHome/backup"$backupCount"
-for (( i=$backupCount; i>=2 ; i-- ));do
+for (( i=backupCount; i>=2 ; i-- ));do
 mv $((i-1)) $i
 done
 mkdir backup1
@@ -76,10 +76,12 @@ fi
 
 
 
-if (( ! $backupCount -ne 0 )); then
+if (( backupCount != 0 )); then
 
 backupHome="$backupHome/backup1"
 cleanup
+
+fi
 
 ##INIT
 size=$(du -hs $vmHome | cut -f 1)
