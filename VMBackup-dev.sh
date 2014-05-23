@@ -43,9 +43,9 @@ rsync -asP --inplace --no-checksum --log-file="$logHome/$(date +%Y%m%d)_backup.l
 
 
 function cleanup(){
-rm -r $backupHome/backup"$backupCount"
+if [ -d "$backupHome/backup$backupCount" ]; then rm -r $backupHome/backup"$backupCount"; fi
 for (( i=backupCount; i>=2 ; i-- ));do
-mv $((i-1)) $i
+if [ -d "$backupHome/backup$i" ];then  mv backup$((i-1)) backup$i; fi
 done
 mkdir backup1
 
@@ -78,8 +78,8 @@ fi
 
 if (( backupCount != 0 )); then
 
-backupHome="$backupHome/backup1"
 cleanup
+backupHome="$backupHome/backup1"
 
 fi
 
