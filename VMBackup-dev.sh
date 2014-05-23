@@ -22,7 +22,8 @@
 
 vmHome="/mnt/cache/VM"
 backupHome="/mnt/user/VMBackup"
-logHome="/mnt/user/VMBackup"
+logHome="/mnt/user/VMBackup/logs"
+backupCount="0"
 
 if [ -f "VMBackup.conf" ]; then
 	source VMBackup.conf;
@@ -41,8 +42,19 @@ rsync -asP --inplace --no-checksum --log-file="$logHome/$(date +%Y%m%d)_backup.l
 }
 
 
+function cleanup(){
+rm -r $backupHome/backup"$backupCount"
+for (( i=$backupCount; i>=2 ; i-- ));do
+mv $((i-1)) $i
+done
+mkdir backup1
+
+}
+
+
+
 ##VERSION
-Version="1.2"
+Version="1.3"
 
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/VMBackup-version)
 clear
@@ -64,10 +76,14 @@ fi
 
 
 
+if (( ! $backupCount -ne 0 )); then
 
+backupHome="$backupHome/backup1"
+cleanup
 
 ##INIT
 size=$(du -hs $vmHome | cut -f 1)
+
 log "Initalizing backup"
 log "$size of data for Potential Backup" 
 mapfile -s2 -t running < <(xl list|cut -d ' ' -f 1)
@@ -96,4 +112,4 @@ log "Skipping $dir reason: deleted"
 
 done
 
-log "Finnished backing up"
+log "Finished backing up"
