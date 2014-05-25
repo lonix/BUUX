@@ -66,6 +66,9 @@ read ibarch_root_pw
 echo -n "Again: "
 read ibarch_root_pw_confirm
 done
+echo "Lets Create a user"
+echo -n "Users Full Name: "
+read ibarch_user_fullname
 echo -n "Username: "
 read ibarch_user_name
 while [[ "$ibarch_user_pw" != "$ibarch_user_pw_confirm" ]]; do

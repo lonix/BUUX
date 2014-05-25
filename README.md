@@ -25,7 +25,7 @@ Supported OperatingSystems
 - CentOS 6
 
 
-Download
+Useage
 ----
 Short Answer:
 
@@ -47,6 +47,8 @@ There are currently 2 Options:
 sample config is found at Buux.conf.sample
 
 
+
+
 Known Issues
 ----
 - You get prompted for disk size even if you wanna use a appliance.
@@ -60,3 +62,27 @@ Planed Features
 - Options for Destruction
 - More....
 
+BUUX-Backup
+=======
+
+
+Usage
+----
+
+Short Answer
+
+```
+   cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/VMBackup.sh -O VMBackup.sh && chmod +x Buux.sh
+```
+
+Configuration
+----
+
+The following is a list of options and theyre default value
+
+| Option      | Default                 | Explain                    |
+| :---------  | :-------------------    | :------------------------- | 
+| backupHome  | /mnt/user/VMBackup      | Location to store backups  |
+| vmHome      | /mnt/cache/VM           | The Location of VMs        |
+| logHome     | /mnt/user/VMBackup/logs | Location to put log        |
+| backupCount | 0                       | Number of backup copys to keep |

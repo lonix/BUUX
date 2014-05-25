@@ -1,3 +1,6 @@
+Version 1.3
+* Now supports multi-versions backup. (via subfolders)
+* Various tweeks
 Version 1.2
 * ConfigFile is added. (more settings comming)
 * VersionCheck (gives a warning when newer version is out)

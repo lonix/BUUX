@@ -22,10 +22,12 @@
 
 vmHome="/mnt/cache/VM"
 backupHome="/mnt/user/VMBackup"
-logHome="/mnt/user/VMBackup"
+logHome="/mnt/user/VMBackup/logs"
+backupCount="0"
 
 if [ -f "VMBackup.conf" ]; then
-	source VMBackup.conf;
+	echo "Config Loaded"
+	source "VMBackup.conf";
 fi
 
 
@@ -33,16 +35,34 @@ fi
 
 function log(){
 stamp=$(date "+%Y/%m/%d %H:%M:%S [$$]")
-echo $stamp $1 >> "$logHome/$(date +%Y%m%d)_backup.log"
+echo "$stamp" "$1" >> "$logHome/$(date +%Y%m%d)_backup.log"
 }
 
 function sync(){
 rsync -asP --inplace --no-checksum --log-file="$logHome/$(date +%Y%m%d)_backup.log" "$vmHome/$dir" "$backupHome"
 }
 
+function cleanup(){
+#echo "Cleanup started"
+if [[ -d "$backupHome"/backup"$backupCount" ]]; then
+	log "Deleteing last backup: backup$backupCount"
+ 	rm -r $backupHome/backup"$backupCount"
+fi
+for (( i=backupCount; i>=2 ; i-- )); do
+	if [[ -d "$backupHome"/backup$((i-1)) ]]; then
+		log "Moving:  backup$((i-1)) to backup$i"
+		 mv $backupHome/backup$((i-1)) $backupHome/backup$i
+	 fi
+done
+log  "Creating new backup folder: $backupHome/backup1"
+mkdir $backupHome/backup1
+
+}
+
+
 
 ##VERSION
-Version="1.2"
+Version="1.3"
 
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/VMBackup-version)
 clear
@@ -59,19 +79,23 @@ if [ "$Version" != "$latest" ]; then
         echo "-----------------------------------------"
         echo "cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/VMBackup.sh -O VMBackup.sh && chmod +x VMBackup.sh"
         echo "-----------------------------------------"
-	sleep 5
+#	sleep 5
 fi
 
 
-
-
+if (( $backupCount != 0 )); then
+log "Cleanup is started."
+cleanup
+backupHome="$backupHome"/backup1
+log "Cleanup is done"
+fi
 
 ##INIT
 size=$(du -hs $vmHome | cut -f 1)
-log "Initalizing backup"
+log "Initialized backup"
 log "$size of data for Potential Backup" 
 mapfile -s2 -t running < <(xl list|cut -d ' ' -f 1)
-#running=( $(xl list | tail -n+3 | cut -d ' ' -f 1) )
+
 cd $vmHome
 for dir in */ ; do
 	dir=${dir%/}
@@ -96,4 +120,4 @@ log "Skipping $dir reason: deleted"
 
 done
 
-log "Finnished backing up"
+log "Finished backing up"
