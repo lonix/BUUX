@@ -16,13 +16,20 @@ Then run the script and answer the questions.
 
 Supported OperatingSystems
 ----
-- Ubuntu Server 12.04 LTS
-- Ubuntu Server 14.04 LTS
-- CentOS6.5 Netboot
-- IronicBadger's ArchVM
-- Debian 6 LTS
-- Debian 7
-- CentOS 6
+The following is a complete list of supported operating systems.
+
+| OS          | Version     | Type(install or deploy)   | | keyword |
+| :----------- | :------------ | :----------- | :------ | 
+| Blank |  |  | blank |  
+| CentoOS | 6.5 | install | cent65 | 
+| Debian | 7 | install | debian7 | 
+| Debian LTS | 6 | install | debian6 |
+| Ironic Badger's ArchVM | 4 | deploy | ibarch4 |
+| Mysql (turnkey) | 13 | deploy | mysql13 | 
+| Owncloud (turnkey) | 13 | deploy | owncloud13 |
+| Tretflix | 1.3 | deploy | tretflix13 |
+| Ubuntu Server 12 | 12.04 | install | ubuntu12 | 
+| Ubuntu Server 14 | 14.04 | install | ubuntu14 |
 
 
 Useage
@@ -32,7 +39,7 @@ Short Answer:
 ```
    cd /boot && wget https://raw.githubusercontent.com/lonix/BUUX/master/Buux.sh -O Buux.sh && chmod +x Buux.sh
 ```
-Paste that into your xen enabled unraid 6b5a+ console To get the latest version.
+Paste that into your xen enabled unraid 6b6b+ console To get the latest version.
 
 Configuration
 ----

@@ -15,7 +15,7 @@
 ####################################################
 
 ##Version Check
-Version="1.4"
+Version="1.5"
 
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/version)
 clear
@@ -67,6 +67,27 @@ echo "------------------------------------------"
 
 }
 
+
+function vmdk_Hack(){
+VMDK=$1
+FULLSIZE=`stat -c%s "$VMDK"`
+VMDKFOOTER=$[$FULLSIZE - 0x400]
+VMDKFOOTERVER=$[$VMDKFOOTER  + 4]
+
+case "`xxd -ps -s $VMDKFOOTERVER -l 1 \"$VMDK\"`" in
+  03)
+    echo -e "$VMDK is VMDK3.\n Patching to VMDK2."
+    echo -en '\x02' | dd conv=notrunc oflag=seek_bytes seek=$[VMDKFOOTERVER] of="$VMDK" 2> /dev/null || echo 'Patc$
+    ;;
+  02)
+    echo -e "$VMDK is VMDK2.\n Patching to VMDK3."
+    echo -en '\x03' | dd conv=notrunc oflag=seek_bytes seek=$[VMDKFOOTERVER] of="$VMDK" 2> /dev/null || echo 'Patc$
+    ;;
+  *) # default
+    echo "$VMDK is not VMDK3 or patched-VMDK3."
+  ;;
+esac
+}
 
 function create_Readme(){
 
@@ -131,7 +152,9 @@ echo "3. CentOS6.5 (cent65)"
 echo "4. Debian 6 LTS (debian6)"
 echo "5. Debian 7 (debian7)"
 echo "6. IronicBadger's ArchVM v.4 (ibarch4un)" 
-#echo "7. Turnkey Owncloud 13(owncloud)"
+echo "7. Tretflix 1.3 (tretflix13)"
+echo "8. Turnkey Owncloud (owncloud13)"
+echo "9. Turnkey MySQL (mysql13)"
 #echo "0. Blank disk and config with boot and install version"
 echo "------------------------------------------"
 echo -n "OperatingSystem: "
@@ -389,21 +412,66 @@ case "$osSelected" in
 		xenman_Autostart
 		attach_WhenDone
 		rm -r ArchVM
-#	owncloud)
-#		createDomain
-#		osName="Owncloud"
-#		config_General
-#		config_Add_Pygrub
-#		wget "http://downloads.sourceforge.net/project/turnkeylinux/xen/turnkey-owncloud-13.0-wheezy-amd64-xen.tar.bz2"
-#		disk_Create
-#		disk_Format
-#		disk_Mount
-#		tar xjf turnkey-owncloud-13.0-wheezy-amd64-xen.tar.bz2 -C /tmp/"$domain"
-#		disk_Umount
-#		umo
-#
-#
-#	rm -r /tmp/$domain
+	;;
+	7|tretflix13)
+		createDomain
+		osName="Tretflix 1.3"
+		config_General
+		config_Add_Pygrub
+		if [[ ! -f Tretflix-v1.3_x64-NAS.zip ]]; then wget http://www.tretflix.com/files/Tretflix-v1.3_x64-NAS.zip; fi
+		if [[ ! -f ubuntu.png ]]; then wget https://raw.githubusercontent.com/lonix/BUUX/master/img/ubuntu.png; fi
+		unzip Tretflix-v1.3_x64-NAS.zip
+		tar xvf Tretflix-v1.3_x64-NAS.ova
+		#Perhaps install xxd
+		if ! command -v xxd>/dev/null; then wget https://dl.dropboxusercontent.com/u/8305657/xxd.txz && installpkg xxd.txz; fi
+		vmdk_Hack Tretflix-v1.3_x64-NAS-disk1.vmdk
+		/usr/lib/xen/bin/qemu-img convert -f vmdk -O raw "Tretflix-v1.3_x64-NAS-disk1.vmdk" "$domain.img" 
+		cp ubuntu.png /boot/config/domains/$domain.png
+		create_Readme
+		xenman_Register
+		create_Detached
+		xenman_Autostart
+		rm Tretflix-v1.3_x64-NAS*
+		if [[ -f xxd.txz ]]; then rm xxd.txz ; fi
+		attach_WhenDone
+	;;
+	8|owncloud13)
+		createDomain
+		osName="Turkey 13 - Owncloud"
+		config_General
+		config_Add_Pygrub
+		if [[ ! -f turnkey-owncloud-13.0-wheezy-amd64-vmdk.zip ]]; then wget http://downloads.sourceforge.net/project/turnkeylinux/vmdk/turnkey-owncloud-13.0-wheezy-amd64-vmdk.zip; fi
+		if [[ ! -f owncloud.png ]]; then wget https://raw.githubusercontent.com/lonix/BUUX/master/img/owncloud.png; fi
+		if ! command -v xxd>/dev/null; then wget https://dl.dropboxusercontent.com/u/8305657/xxd.txz && installpkg xxd.txz; fi
+		unzip turnkey-owncloud-13.0-wheezy-amd64-vmdk.zip
+		/usr/lib/xen/bin/qemu-img convert -f vmdk -O raw turnkey-owncloud-13.0-wheezy-amd64/turnkey-owncloud-13.0-wheezy-amd64.vmdk "$domain.img"
+		cp owncloud.png /boot/config/domains/$domain.png
+		create_Readme
+		xenman_Register
+		create_Detached
+		xenman_Autostart
+		rm -r turnkey-owncloud-13.0-wheezy-amd64*
+		if [[ -f xxd.txz ]]; then rm xxd.txz ; fi
+		attach_WhenDone
+	;;
+	9|mysql13)
+		createDomain
+		osName="Turkey 13 - MySQL"
+		config_General
+		config_Add_Pygrub
+		if [[ ! -f turnkey-mysql-13.0-wheezy-amd64-vmdk.zip ]]; then wget  http://downloads.sourceforge.net/project/turnkeylinux/vmdk/turnkey-mysql-13.0-wheezy-amd64-vmdk.zip; fi
+		if [[ ! -f mysql.png ]]; then wget https://raw.githubusercontent.com/lonix/BUUX/master/img/mysql.png; fi
+		if ! command -v xxd>/dev/null; then wget https://dl.dropboxusercontent.com/u/8305657/xxd.txz && installpkg xxd.txz; fi
+		unzip turnkey-mysql-13.0-wheezy-amd64-vmdk.zip
+		/usr/lib/xen/bin/qemu-img convert -f vmdk -O raw turnkey-mysql-13.0-wheezy-amd64/turnkey-mysql-13.0-wheezy-amd64.vmdk "$domain.img"
+		cp mysql.png /boot/config/domains/$domain.png
+		create_Readme
+		xenman_Register
+		create_Detached
+		xenman_Autostart
+		rm -r turnkey-mysql-13.0-wheezy-amd64*
+		if [[ -f xxd.txz ]]; then rm xxd.txz ; fi
+		attach_WhenDone
 
 	;;
 	0|blank)
@@ -417,18 +485,6 @@ case "$osSelected" in
 		mv $domain.cfg ${domain}-install.cfg
 		disk_Create
 		create_Readme
-
-
-
-#	;;
-#	tretflix13)
-#		wget http://www.tretflix.com/files/Tretflix-v1.3_x64-NAS.zip
-#		unzip Tretflix-v1.3_x64-NAS.zip
-#		tar xvf Tretflix-v1.3_x64-NAS.ova
-#		qemu-img convert -O raw Tretflix-v1.3_x64-NAS-disk1.vmdk Tretflix-v1.3_x64-NAS.img
-#		
-
-
 	;;
 esac
 
