@@ -15,7 +15,7 @@
 ####################################################
 
 ##Version Check
-Version="1.4"
+Version="1.5"
 
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/version)
 clear
@@ -54,31 +54,6 @@ fi
 
 
 
-function ibarch_Gather() {
-runonce="$rootDir"/"$domain"/runonce.cfg
-touch $runonce
-echo "dom0ip=$(ifconfig br0 | grep inet | cut -d ' ' -f 10)" >> $runonce
-echo "dom0host=$(cat /etc/hostname)" >> $runonce
-echo "You are about to pre-seed the ArchVM"
-while [[ "$ibarch_root_pw" != "$ibarch_root_pw_confirm" ]]; do
-echo -n "Enter root password: "
-read ibarch_root_pw
-echo -n "Again: "
-read ibarch_root_pw_confirm
-done
-echo "Lets Create a user"
-echo -n "Users Full Name: "
-read ibarch_user_fullname
-echo -n "Username: "
-read ibarch_user_name
-while [[ "$ibarch_user_pw" != "$ibarch_user_pw_confirm" ]]; do
-echo -n "Enter $ibarch_user_name's password: "
-read ibarch_user_pw
-eacho -n "Again: "
-read ibarch_user_pw_confirm
-}
-
-
 function manualSteps() {
 echo "------------------------------------------"
 read -p "Press [Enter] To Start your Installation"
@@ -92,6 +67,27 @@ echo "------------------------------------------"
 
 }
 
+
+function vmdk_Hack(){
+VMDK=$1
+FULLSIZE=`stat -c%s "$VMDK"`
+VMDKFOOTER=$[$FULLSIZE - 0x400]
+VMDKFOOTERVER=$[$VMDKFOOTER  + 4]
+
+case "`xxd -ps -s $VMDKFOOTERVER -l 1 \"$VMDK\"`" in
+  03)
+    echo -e "$VMDK is VMDK3.\n Patching to VMDK2."
+    echo -en '\x02' | dd conv=notrunc oflag=seek_bytes seek=$[VMDKFOOTERVER] of="$VMDK" 2> /dev/null || echo 'Patc$
+    ;;
+  02)
+    echo -e "$VMDK is VMDK2.\n Patching to VMDK3."
+    echo -en '\x03' | dd conv=notrunc oflag=seek_bytes seek=$[VMDKFOOTERVER] of="$VMDK" 2> /dev/null || echo 'Patc$
+    ;;
+  *) # default
+    echo "$VMDK is not VMDK3 or patched-VMDK3."
+  ;;
+esac
+}
 
 function create_Readme(){
 
@@ -157,7 +153,7 @@ echo "4. Debian 6 LTS (debian6)"
 echo "5. Debian 7 (debian7)"
 echo "6. IronicBadger's ArchVM v.4 (ibarch4un)" 
 #echo "7. Turnkey Owncloud 13(owncloud)"
-echo "0. Blank disk and config with boot and install version"
+#echo "0. Blank disk and config with boot and install version"
 echo "------------------------------------------"
 echo -n "OperatingSystem: "
 read osSelected
@@ -223,7 +219,7 @@ mount -o loop,rw,sync $domain.img /tmp/$domain
 
 function disk_Umount(){
 umount /tmp/$domain
-rm -r /tmp/$domain
+rm -r $domain
 }
 
 
@@ -267,7 +263,7 @@ echo "bootloader = \"pygrub\"" >> $rootDir/$domain/$domain.cfg
 
 ##Asks Quesions to make up data of config
 
-while [[ "$configIsGood" != "y" ]]
+while [ "$configIsGood" != "y" ]
  do
 	clear
 	configAsk
@@ -414,26 +410,30 @@ case "$osSelected" in
 		xenman_Autostart
 		attach_WhenDone
 		rm -r ArchVM
-	ibarch5)
+	;;
+	7|tretflix13)
 		createDomain
-		osName="Ironic Badger's ArchVM v.5"
-		ibarch_Gather
-		config_General
+		osName="Tretflix 1.3"
+		config_general
 		config_Add_Pygrub
-		if  [[ ! -f ArchVM_v5.zip ]]; then wget https://dl.dropboxusercontent.com/u/6775695/ArchVM/ArchVM_v5.zip; fi
-		if  [[ ! -f ArchVM_v5.zip ]]; then wget http://unraidrepo.ktz.me/archVM/ArchVM_v5.zip; fi
-		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/archlinux.png
-		unzip ArchVM_v5.zip
-		mv "ArchVM/arch.img" "$domain.img"
-		cp archlinux.png /boot/config/domains/$domain.png
+		if [[ ! -f Tretflix-v1.3_x64-NAS.zip ]]; then wget http://www.tretflix.com/files/Tretflix-v1.3_x64-NAS.zip; fi
+		if [[ ! -f ubuntu.png ]]; then wget https://raw.githubusercontent.com/lonix/BUUX/master/img/ubuntu.png; fi
+		unzip Tretflix-v1.3_x64-NAS.zip
+		tar xvf Tretflix-v1.3_x64-NAS.ova
+		#Perhaps install xxd
+		if ! command -v xxd>/dev/null; then wget https://dl.dropboxusercontent.com/u/8305657/xxd.txz && installpkg xxd.txz; fi
+		vmdk_Hack Tretflix-v1.3_x64-NAS-disk1.vmdk
+		/usr/lib/xen/bin/qemu-img convert -f vmdk -O raw "Tretflix-v1.3_x64-NAS-disk1.vmdk" "$domain.img" 
+		cp ubuntu.png /boot/config/domains/$domain.png
 		create_Readme
-		ibarch_SaveOptions
 		xenman_Register
-		create_Detached
+		create_detached
 		xenman_Autostart
+		rm Tretflix-v1.3_x64-NAS*
+		if [[ xxd.txz ]]; then rm xxd.txz ; fi
 		attach_WhenDone
-		rm -r ArchVM
 
+#	;;
 #	owncloud)
 #		createDomain
 #		osName="Owncloud"
