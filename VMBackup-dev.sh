@@ -24,12 +24,11 @@ vmHome="/mnt/cache/VM"
 backupHome="/mnt/user/VMBackup"
 logHome="/mnt/user/VMBackup/logs"
 backupCount="0"
-
-if [ -f "VMBackup.conf" ]; then
-	echo "Config Loaded"
-	source "VMBackup.conf";
+base_dir=`dirname $0`
+if [ -f "$base_dir/VMBackup.conf" ]; then
+        echo "Config Loaded"
+        source "$base_dir/VMBackup.conf";
 fi
-
 
 ##Functions
 
@@ -62,7 +61,7 @@ mkdir $backupHome/backup1
 
 
 ##VERSION
-Version="1.3"
+Version="1.3.1"
 
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/VMBackup-version)
 clear

@@ -25,6 +25,7 @@ The following is a complete list of supported operating systems.
 | Debian | 7 | install | debian7 | 
 | Debian LTS | 6 | install | debian6 |
 | Ironic Badger's ArchVM | 4 | deploy | ibarch4 |
+| Ironic Badger's ArchVM | 5 | deploy | ibarch5 |
 | Mysql (turnkey) | 13 | deploy | mysql13 | 
 | Owncloud (turnkey) | 13 | deploy | owncloud13 |
 | Tretflix | 1.3 | deploy | tretflix13 |
