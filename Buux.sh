@@ -7,9 +7,8 @@
 #
 #
 # Single # is used for commenting out code. i.e. code that is not yet functioning
-# dubble # is used for Code Explain i.e. ##Download required files
-# ##TODO
-# Todo is for planned implements 
+# double # is used for Code Explain i.e. ##Download required files
+# ##TODO is for planned implements
 #
 #
 ####################################################
@@ -20,7 +19,7 @@ Version="1.5"
 latest=$(curl -s https://raw.githubusercontent.com/lonix/BUUX/master/version)
 clear
 if [ "$Version" != "$latest" ]; then
-	echo "New version is avalible, newest version is $latest" 
+	echo "New version is availble, newest version is $latest" 
 	echo "you are running version $Version"
 	echo ""
 	echo "New this version: "
@@ -124,12 +123,12 @@ BBBBBB   UUUUU   UUUUU  XX    XX
 
 Written By Stian Larsen (aka. lonix) 
 ------------------------------------------
-We will Start by asking you some Quesions:
+We will Start by asking you some Questions:
 RAM should be Defined in MB and the Power of 2
-Disk shoud be Defined in GB
+Disk should be Defined in GB
 
 Note: If planning to install pre-imaged appliances.
-disk size is ignored, but still requred to enter.
+disk size is ignored, but still required to enter.
 ------------------------------------------
 "
 echo -n "Domainname: "
@@ -151,7 +150,7 @@ echo "2. Ubuntu Server 14.04 LTS (ubuntu14)"
 echo "3. CentOS6.5 (cent65)"
 echo "4. Debian 6 LTS (debian6)"
 echo "5. Debian 7 (debian7)"
-echo "6. IronicBadger's ArchVM v.4 (ibarch4un)" 
+echo "6. IronicBadger's ArchVM v.5 (ibarch5)" 
 echo "7. Tretflix 1.3 (tretflix13)"
 echo "8. Turnkey Owncloud (owncloud13)"
 echo "9. Turnkey MySQL (mysql13)"
@@ -263,7 +262,7 @@ echo "bootloader = \"pygrub\"" >> $rootDir/$domain/$domain.cfg
 
 
 
-##Asks Quesions to make up data of config
+##Asks Questions to make up data of config
 
 while [ "$configIsGood" != "y" ]
  do
@@ -395,7 +394,7 @@ case "$osSelected" in
 		rm vmlinuz
 
 	;;
-	6|ibarch4)
+	ibarch4)
 		createDomain
 		osName="Ironic Badger's ArchVM v.4"
 		config_General
@@ -404,6 +403,23 @@ case "$osSelected" in
 		if  [[ ! -f ArchVM_v4.zip ]]; then wget http://unraidrepo.ktz.me/archVM/ArchVM_v4.zip; fi
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/archlinux.png
 		unzip ArchVM_v4.zip
+		mv "ArchVM/arch.img" "$domain.img"
+		cp archlinux.png /boot/config/domains/$domain.png
+		create_Readme
+		xenman_Register
+		create_Detached
+		xenman_Autostart
+		attach_WhenDone
+		rm -r ArchVM
+	6|ibarch5)
+		createDomain
+		osName="Ironic Badger's ArchVM v.5"
+		config_General
+		config_Add_Pygrub
+		if  [[ ! -f ArchVM_v5.zip ]]; then wget https://dl.dropboxusercontent.com/u/6775695/ArchVM/ArchVM_v5.zip; fi
+		if  [[ ! -f ArchVM_v5.zip ]]; then wget http://unraidrepo.ktz.me/archVM/ArchVM_v5.zip; fi
+		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/archlinux.png
+		unzip ArchVM_v5.zip
 		mv "ArchVM/arch.img" "$domain.img"
 		cp archlinux.png /boot/config/domains/$domain.png
 		create_Readme
