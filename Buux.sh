@@ -150,7 +150,7 @@ echo "2. Ubuntu Server 14.04 LTS (ubuntu14)"
 echo "3. CentOS6.5 (cent65)"
 echo "4. Debian 6 LTS (debian6)"
 echo "5. Debian 7 (debian7)"
-echo "6. IronicBadger's ArchVM v.5 (ibarch5)" 
+echo "6. IronicBadger's ArchVM v.5 (ibarch5)[RECOMMENDED]" 
 echo "7. Tretflix 1.3 (tretflix13)"
 echo "8. Turnkey Owncloud (owncloud13)"
 echo "9. Turnkey MySQL (mysql13)"
@@ -399,8 +399,7 @@ case "$osSelected" in
 		osName="Ironic Badger's ArchVM v.4"
 		config_General
 		config_Add_Pygrub
-		if  [[ ! -f ArchVM_v4.zip ]]; then wget https://dl.dropboxusercontent.com/u/6775695/ArchVM/ArchVM_v4.zip; fi
-		if  [[ ! -f ArchVM_v4.zip ]]; then wget http://unraidrepo.ktz.me/archVM/ArchVM_v4.zip; fi
+		if  [[ ! -f ArchVM_v4.zip ]]; then wget http://dl.larsendata.no/archvm/ArchVM_v4.zip; fi
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/archlinux.png
 		unzip ArchVM_v4.zip
 		mv "ArchVM/arch.img" "$domain.img"
@@ -411,13 +410,14 @@ case "$osSelected" in
 		xenman_Autostart
 		attach_WhenDone
 		rm -r ArchVM
+	;;
 	6|ibarch5)
 		createDomain
 		osName="Ironic Badger's ArchVM v.5"
 		config_General
 		config_Add_Pygrub
-		if  [[ ! -f ArchVM_v5.zip ]]; then wget https://dl.dropboxusercontent.com/u/6775695/ArchVM/ArchVM_v5.zip; fi
-		if  [[ ! -f ArchVM_v5.zip ]]; then wget http://unraidrepo.ktz.me/archVM/ArchVM_v5.zip; fi
+		if  [[ ! -f ArchVM_v5.zip ]]; then wget http://repo.ktz.me/archVM/ArchVM_v5.zip; fi
+		if  [[ ! -f ArchVM_v5.zip ]]; then wget http://dl.larsendata.no/archvm/ArchVM_v5.zip; fi
 		wget https://raw.githubusercontent.com/lonix/BUUX/master/img/archlinux.png
 		unzip ArchVM_v5.zip
 		mv "ArchVM/arch.img" "$domain.img"
@@ -434,12 +434,12 @@ case "$osSelected" in
 		osName="Tretflix 1.3"
 		config_General
 		config_Add_Pygrub
-		if [[ ! -f Tretflix-v1.3_x64-NAS.zip ]]; then wget http://www.tretflix.com/files/Tretflix-v1.3_x64-NAS.zip; fi
+		if [[ ! -f Tretflix-v1.3_x64-NAS.zip ]]; then wget http://dl.larsendata.no/tretflix/Tretflix-v1.3_x64-NAS.zip; fi
+		if [[ ! -f Tretflix-v1.3_x64-NAS.zip ]]; then wget http://repo.ktz.me/tretflix/Tretflix-v1.3_x64-NAS.zip; fi
 		if [[ ! -f ubuntu.png ]]; then wget https://raw.githubusercontent.com/lonix/BUUX/master/img/ubuntu.png; fi
 		unzip Tretflix-v1.3_x64-NAS.zip
 		tar xvf Tretflix-v1.3_x64-NAS.ova
-		#Perhaps install xxd
-		if ! command -v xxd>/dev/null; then wget https://dl.dropboxusercontent.com/u/8305657/xxd.txz && installpkg xxd.txz; fi
+		if ! command -v xxd>/dev/null; then wget http://dl.larsendata.no/xxd.txz && installpkg xxd.txz; fi
 		vmdk_Hack Tretflix-v1.3_x64-NAS-disk1.vmdk
 		/usr/lib/xen/bin/qemu-img convert -f vmdk -O raw "Tretflix-v1.3_x64-NAS-disk1.vmdk" "$domain.img" 
 		cp ubuntu.png /boot/config/domains/$domain.png
@@ -458,7 +458,7 @@ case "$osSelected" in
 		config_Add_Pygrub
 		if [[ ! -f turnkey-owncloud-13.0-wheezy-amd64-vmdk.zip ]]; then wget http://downloads.sourceforge.net/project/turnkeylinux/vmdk/turnkey-owncloud-13.0-wheezy-amd64-vmdk.zip; fi
 		if [[ ! -f owncloud.png ]]; then wget https://raw.githubusercontent.com/lonix/BUUX/master/img/owncloud.png; fi
-		if ! command -v xxd>/dev/null; then wget https://dl.dropboxusercontent.com/u/8305657/xxd.txz && installpkg xxd.txz; fi
+		if ! command -v xxd>/dev/null; then wget http://dl.larsendata.no/xxd.txz && installpkg xxd.txz; fi
 		unzip turnkey-owncloud-13.0-wheezy-amd64-vmdk.zip
 		/usr/lib/xen/bin/qemu-img convert -f vmdk -O raw turnkey-owncloud-13.0-wheezy-amd64/turnkey-owncloud-13.0-wheezy-amd64.vmdk "$domain.img"
 		cp owncloud.png /boot/config/domains/$domain.png
@@ -477,7 +477,7 @@ case "$osSelected" in
 		config_Add_Pygrub
 		if [[ ! -f turnkey-mysql-13.0-wheezy-amd64-vmdk.zip ]]; then wget  http://downloads.sourceforge.net/project/turnkeylinux/vmdk/turnkey-mysql-13.0-wheezy-amd64-vmdk.zip; fi
 		if [[ ! -f mysql.png ]]; then wget https://raw.githubusercontent.com/lonix/BUUX/master/img/mysql.png; fi
-		if ! command -v xxd>/dev/null; then wget https://dl.dropboxusercontent.com/u/8305657/xxd.txz && installpkg xxd.txz; fi
+		if ! command -v xxd>/dev/null; then wget http://dl.larsendata.no/xxd.txz && installpkg xxd.txz; fi
 		unzip turnkey-mysql-13.0-wheezy-amd64-vmdk.zip
 		/usr/lib/xen/bin/qemu-img convert -f vmdk -O raw turnkey-mysql-13.0-wheezy-amd64/turnkey-mysql-13.0-wheezy-amd64.vmdk "$domain.img"
 		cp mysql.png /boot/config/domains/$domain.png
